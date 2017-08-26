@@ -17,6 +17,7 @@ pipeline:
     # image: plugins/docker
     image: joshdvir/drone-docker
     repo: joshdvir/drone-docker
+    debug: true
     tags: [ "latest", "17", "17.05" ]
     secrets: [ docker_username, docker_password ]
     when:
