@@ -130,11 +130,6 @@ func main() {
 			Usage:  "build args",
 			EnvVar: "PLUGIN_BUILD_ARGS",
 		},
-		cli.StringFlag{
-			Name:   "target",
-			Usage:  "build target",
-			EnvVar: "PLUGIN_BUILD_TARGET",
-		},
 		cli.BoolFlag{
 			Name:   "squash",
 			Usage:  "squash the layers at build time",

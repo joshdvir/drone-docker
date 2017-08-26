@@ -201,9 +201,6 @@ func commandBuild(build Build) *exec.Cmd {
 	if build.Pull {
 		args = append(args, "--pull=true")
 	}
-	if build.Target != "" {
-		args = append(args, "--target", build.Target)
-	}
 	for _, arg := range build.Args {
 		args = append(args, "--build-arg", arg)
 	}
