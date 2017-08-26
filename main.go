@@ -29,6 +29,12 @@ func main() {
 			EnvVar: "PLUGIN_DRY_RUN",
 		},
 		cli.StringFlag{
+			Name:   "keep",
+			Usage:  "How many images to keep to utilize Docker cache",
+			EnvVar: "PLUGIN_KEEP",
+			Value:  "1",
+		},
+		cli.StringFlag{
 			Name:   "remote.url",
 			Usage:  "git remote url",
 			EnvVar: "DRONE_REMOTE_URL",
@@ -124,6 +130,11 @@ func main() {
 			Usage:  "build args",
 			EnvVar: "PLUGIN_BUILD_ARGS",
 		},
+		cli.StringFlag{
+			Name:   "target",
+			Usage:  "build target",
+			EnvVar: "PLUGIN_BUILD_TARGET",
+		},
 		cli.BoolFlag{
 			Name:   "squash",
 			Usage:  "squash the layers at build time",
@@ -180,6 +191,7 @@ func main() {
 func run(c *cli.Context) error {
 	plugin := Plugin{
 		Dryrun: c.Bool("dry-run"),
+		Keep:   c.String("keep"),
 		Login: Login{
 			Registry: c.String("docker.registry"),
 			Username: c.String("docker.username"),

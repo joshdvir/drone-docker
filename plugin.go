@@ -48,6 +48,7 @@ type (
 		Context     string   // Docker build context
 		Tags        []string // Docker build tags
 		Args        []string // Docker build args
+		Target      string   // Docker build target
 		Squash      bool     // Docker build squash
 		Pull        bool     // Docker build pull
 		Compress    bool     // Docker build compress
@@ -61,6 +62,7 @@ type (
 		Build  Build  // Docker build configuration
 		Daemon Daemon // Docker daemon configuration
 		Dryrun bool   // Docker push is skipped
+		Keep   string // Docker images to keep for cache
 	}
 )
 
@@ -126,8 +128,8 @@ func (p Plugin) Exec() error {
 		}
 	}
 
-	cmds = append(cmds, commandRmi(p.Build.Name)) // docker rmi
-	cmds = append(cmds, commandPrune())           // docker system prune -f
+	cmds = append(cmds, commandRmi(p.Build.Name, p.Keep)) // docker rmi
+	cmds = append(cmds, commandPrune())                   // docker system prune -f
 
 	// execute all commands in batch mode.
 	for _, cmd := range cmds {
@@ -198,6 +200,9 @@ func commandBuild(build Build) *exec.Cmd {
 	}
 	if build.Pull {
 		args = append(args, "--pull=true")
+	}
+	if build.Target != "" {
+		args = append(args, "--target", build.Target)
 	}
 	for _, arg := range build.Args {
 		args = append(args, "--build-arg", arg)
@@ -318,8 +323,8 @@ func commandPrune() *exec.Cmd {
 	return exec.Command(dockerExe, "system", "prune", "-f")
 }
 
-func commandRmi(tag string) *exec.Cmd {
-	return exec.Command(dockerExe, "rmi", tag)
+func commandRmi(tag string, keep string) *exec.Cmd {
+	return exec.Command(dockerExe, "rmi", "$(", dockerExe, "images", "--filter", "reference=", tag, "*", "--format", "{{.ID}}", "|", "sed", "1,", keep, "d", ")")
 }
 
 // trace writes each command to stdout with the command wrapped in an xml
