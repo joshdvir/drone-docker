@@ -31,7 +31,7 @@ func main() {
 			EnvVar: "PLUGIN_DRY_RUN",
 		},
 		cli.StringFlag{
-			Name:   "keep",
+			Name:   "docker.keep",
 			Usage:  "How many images to keep to utilize Docker cache",
 			EnvVar: "PLUGIN_KEEP",
 			Value:  "1",

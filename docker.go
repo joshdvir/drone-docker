@@ -17,7 +17,7 @@ type (
 		Insecure      bool     // Docker daemon enable insecure registries
 		StorageDriver string   // Docker daemon storage driver
 		StoragePath   string   // Docker daemon storage path
-		Disabled      bool     // DOcker daemon is disabled (already running)
+		Disabled      bool     // Docker daemon is disabled (already running)
 		Debug         bool     // Docker daemon started in debug mode
 		Bip           string   // Docker daemon network bridge IP address
 		DNS           []string // Docker daemon dns server
@@ -128,7 +128,7 @@ func (p Plugin) Exec() error {
 	}
 
 	if p.Cleanup {
-		cmds = append(cmds, commandRmi(p.Build.Name, p.Keep)) // docker rmi
+		cmds = append(cmds, commandRmi(p.Build.Repo, p.Keep)) // docker rmi
 		if p.Prune == true {
 			cmds = append(cmds, commandPrune())           // docker system prune -f
 		}
@@ -333,7 +333,7 @@ func commandPrune() *exec.Cmd {
 }
 
 func commandRmi(tag string, keep string) *exec.Cmd {
-	return exec.Command("/bin/sh", "-c", dockerExe + " rmi \"$(" + dockerExe + " images -f reference=" + tag +":* -q | sed 1," + keep + "d)\" | exit 0")
+	return exec.Command("/bin/sh", "-c", dockerExe + " rmi \"$(" + dockerExe + " images -f reference=" + tag +":* -q | sed 1," + keep + "d)\"")
 }
 
 // trace writes each command to stdout with the command wrapped in an xml
