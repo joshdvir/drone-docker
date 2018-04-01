@@ -13,7 +13,7 @@ pipeline:
       - sh .drone.sh
 
   publish:
-    image: joshdvir/drone-docker
+    image: plugins/docker
     repo: joshdvir/drone-docker
     debug: true
     tags: [ "latest", "17", "17.12" ]
