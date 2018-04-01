@@ -333,7 +333,7 @@ func commandPrune() *exec.Cmd {
 }
 
 func commandRmi(tag string, keep string) *exec.Cmd {
-	return exec.Command("/bin/sh", "-c", dockerExe + " rmi \"$(" + dockerExe + " images -f reference=" + tag +":* -q | sed 1," + keep + "d)\"")
+	return exec.Command("/bin/sh", "-c", dockerExe + " rmi \"$(" + dockerExe + " images -f reference=" + tag +":* -q | sed 1," + keep + "d)\" | exit 0")
 }
 
 // trace writes each command to stdout with the command wrapped in an xml

@@ -211,6 +211,7 @@ func main() {
 		cli.BoolTFlag{
 			Name:   "docker.prune",
 			Usage:  "docker should prune images",
+			Value:  "false"
 			EnvVar: "PLUGIN_PRUNE",
 		},
 		cli.StringFlag{
