@@ -61,6 +61,7 @@ type (
 		Dryrun bool   // Docker push is skipped
 		Keep   string // Docker images to keep for cache
 		Cleanup bool   // Docker purge is enabled
+		Prune bool   // Docker prune is enabled
 	}
 )
 
@@ -128,7 +129,9 @@ func (p Plugin) Exec() error {
 
 	if p.Cleanup {
 		cmds = append(cmds, commandRmi(p.Build.Name, p.Keep)) // docker rmi
-		cmds = append(cmds, commandPrune())           // docker system prune -f
+		if p.Prune {
+			cmds = append(cmds, commandPrune())           // docker system prune -f
+		}
 	}
 
 	// execute all commands in batch mode.
@@ -330,7 +333,7 @@ func commandPrune() *exec.Cmd {
 }
 
 func commandRmi(tag string, keep string) *exec.Cmd {
-	return exec.Command(dockerExe, "rmi", "$(", dockerExe, "images", "--filter", "reference=", tag, "*", "--format", "{{.ID}}", "|", "sed", "1,", keep, "d", ")")
+	return exec.Command("/bin/sh", "-c", dockerExe + " rmi \"$(" + dockerExe + " images -f reference=" + tag +":* -q | sed 1," + keep + "d)\" | exit 0")
 }
 
 // trace writes each command to stdout with the command wrapped in an xml
