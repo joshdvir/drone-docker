@@ -208,6 +208,11 @@ func main() {
 			Usage:  "docker should cleanup images",
 			EnvVar: "PLUGIN_PURGE",
 		},
+		cli.BoolTFlag{
+			Name:   "docker.prune",
+			Usage:  "docker should prune images",
+			EnvVar: "PLUGIN_PRUNE",
+		},
 		cli.StringFlag{
 			Name:   "repo.branch",
 			Usage:  "repository default branch",

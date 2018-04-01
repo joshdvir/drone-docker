@@ -13,12 +13,17 @@ pipeline:
       - sh .drone.sh
 
   publish:
-    image: plugins/docker
+    image: joshdvir/drone-docker
     repo: joshdvir/drone-docker
     debug: true
+    keep: 2
+    prone: false
+    daemon_off: true
     tags: [ "latest", "17", "17.12" ]
     secrets: [ docker_username, docker_password ]
     dockerfile: docker/Dockerfile
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     when:
       branch: master
       event: push
